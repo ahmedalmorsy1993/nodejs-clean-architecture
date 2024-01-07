@@ -1,12 +1,12 @@
-import bodyParser from 'body-parser';
-import express from 'express'
+
 import { AppDataSource } from '../ormconfig';
-const app = express()
-app.use(bodyParser.urlencoded({ extended: false }))
+import { app } from './app';
+
+// routes
+import './routes'
 
 
-
-
+// initialize server
 const port = process.env.PORT || 8000;
 AppDataSource.initialize().then(() => {
   app.listen(port, () => {

@@ -2,6 +2,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "nodemon": "^3.0.2",
     "reflect-metadata": "^0.2.1",
@@ -9,7 +10,8 @@
     "typeorm": "^0.3.19"
   },
   "scripts": {
-    "start": "nodemon src/index.ts --w",
+    "start": "NODE_ENV=production node /src/index",
+    "dev": "nodemon src/index.ts --w",
     "test": "jest"
   },
   "devDependencies": {
