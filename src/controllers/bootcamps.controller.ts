@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { BootCampsService } from "../services/bootcamps.service";
+import { IController } from "../types/global";
 
-export class BootCampController {
+export class BootCampController implements IController {
   constructor(private bootcampService: BootCampsService) { }
   list = (req: Request, res: Response) => {
     res.send(this.bootcampService.list())

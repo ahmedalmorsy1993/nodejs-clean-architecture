@@ -1,4 +1,6 @@
-export class BootCampsService {
+import { IService } from "../types/global"
+
+export class BootCampsService implements IService {
   list() {
     return 'get all bootsCamps'
   }
