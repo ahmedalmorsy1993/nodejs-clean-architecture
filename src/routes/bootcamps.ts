@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { BootCampsService } from '../services/bootcamps.service';
 import { BootCampController } from '../controllers/bootcamps.controller';
+import { container } from 'tsyringe';
 const router: Router = Router();
 
-const bootCampController = new BootCampController(new BootCampsService())
+const bootCampController = container.resolve(BootCampController)
 
-router.get('/bootcamps', bootCampController.list)
+router.route('/bootcamps').get(bootCampController.list).post(bootCampController.create)
+
 
 export default router

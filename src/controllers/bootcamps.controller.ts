@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { BootCampsService } from "../services/bootcamps.service";
 import { IController } from "../types/global";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class BootCampController implements IController {
   constructor(private bootcampService: BootCampsService) { }
   list = async (req: Request, res: Response) => {

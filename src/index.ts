@@ -1,6 +1,7 @@
 
 import { AppDataSource } from '../ormconfig';
 import { app } from './app';
+import "reflect-metadata";
 
 // routes
 import './routes'
