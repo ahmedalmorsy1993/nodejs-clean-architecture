@@ -1,6 +1,5 @@
-import { BaseEntity, SelectQueryBuilder } from "typeorm";
+import { Repository } from 'typeorm';
 
-// Define a generic interface for pagination metadata
 interface PaginationMeta {
   total: number;
   per_page: number;
@@ -8,32 +7,31 @@ interface PaginationMeta {
   last_page: number;
 }
 
-// Define a generic function to paginate a query
-export async function paginate<T extends BaseEntity>(
-  queryBuilder: SelectQueryBuilder<T>,
-  page: number = 1,
-  perPage: number = 10
-): Promise<{ data: T[]; meta: PaginationMeta }> {
-  // Calculate the number of records to skip
-  const skip = (page - 1) * perPage;
+export class Paginator<T> {
+  constructor(private repository: Repository<T>) { }
 
-  // Apply pagination options to the query
-  const items = await queryBuilder.skip(skip).take(perPage).getMany();
+  async paginate(
+    page: number = 1,
+    perPage: number = 10
+  ): Promise<{ data: T[]; meta: PaginationMeta }> {
+    const skip = (page - 1) * perPage;
 
-  // Get the total count of items (without pagination)
-  const total = await queryBuilder.getCount();
+    const queryBuilder = this.repository.createQueryBuilder();
 
-  // Calculate the total number of pages
-  const last_page = Math.ceil(total / perPage);
+    const [items, total] = await Promise.all([
+      queryBuilder.skip(skip).take(perPage).getMany(),
+      queryBuilder.getCount(),
+    ]);
 
-  // Create pagination metadata
-  const meta: PaginationMeta = {
-    total,
-    per_page: perPage,
-    current_page: +page,
-    last_page
-  };
+    const last_page = Math.ceil(total / perPage);
 
-  // Return data and metadata
-  return { data: items, meta };
+    const meta: PaginationMeta = {
+      total,
+      per_page: perPage,
+      current_page: +page,
+      last_page,
+    };
+
+    return { data: items, meta };
+  }
 }

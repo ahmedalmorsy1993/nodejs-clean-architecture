@@ -4,15 +4,17 @@ import { IController } from "../types/global";
 
 export class BootCampController implements IController {
   constructor(private bootcampService: BootCampsService) { }
-  list = (req: Request, res: Response) => {
-    res.send(this.bootcampService.list())
+  list = async (req: Request, res: Response) => {
+    res.send(await this.bootcampService.list(req))
+  }
+
+  create = (req: Request, res: Response) => {
+
   }
   show = (req: Request, res: Response) => {
 
   }
-  create = (req: Request, res: Response) => {
 
-  }
   update = (req: Request, res: Response) => {
 
   }

@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 
+
+export interface IQuery {
+  page: number
+}
 export interface IService {
-  list(): string;
+  list(req: Request): unknown;
   create(): string;
   show(id: number): string;
   update(id: number): string;
