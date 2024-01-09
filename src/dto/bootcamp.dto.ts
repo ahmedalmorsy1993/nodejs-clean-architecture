@@ -1,6 +1,9 @@
-import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, Matches, Max, MaxLength, Min } from "class-validator";
 import { websiteRegex } from "../utils/patterns";
+import { TCareer } from "../entities/BootCamp";
 
+
+export const careersEnum = ['web development', 'mobile development', 'ui/ux', 'data science', 'business', 'other']
 export class BootCampDto {
   @IsNotEmpty()
   @IsString()
@@ -12,7 +15,7 @@ export class BootCampDto {
   description: string
 
   @IsNotEmpty()
-  @Matches(websiteRegex)
+  @Matches(websiteRegex, { message: 'Invalid Url' })
   website: string
 
   @IsNotEmpty()
@@ -22,5 +25,42 @@ export class BootCampDto {
   @IsNotEmpty()
   @IsEmail()
   email: string
+
+  @IsNotEmpty()
+  address: string
+
+  @IsNotEmpty()
+  @IsEnum(careersEnum, {
+    each: true, message: (props) => {
+      const validValues = careersEnum.join(', ');
+      return `each value in careers must be one of the following values: ${validValues}`;
+    },
+  }) // Ensure each value in the array matches the enum type
+  careers: TCareer[];
+
+  @IsNotEmpty()
+  @Min(1)
+  @Max(10)
+  averageRating: number
+
+
+
+  @IsNotEmpty()
+  averageCost: number
+  @IsNotEmpty()
+  location: string
+
+  @IsOptional()
+  photo: string
+
+  @IsNotEmpty()
+  housing: boolean
+  @IsNotEmpty()
+  jobAssistance: boolean
+  @IsNotEmpty()
+  jobGuarantee: boolean
+  @IsNotEmpty()
+  acceptGi: boolean
+
 
 }

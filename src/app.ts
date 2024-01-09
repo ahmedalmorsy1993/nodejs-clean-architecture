@@ -6,6 +6,7 @@ export const app = express()
 
 dotenv.config()
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.json())
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))

@@ -2,8 +2,9 @@ import { IsEmail, Matches, Max, Min } from "class-validator";
 import { Column, CreateDateColumn } from "typeorm";
 import { BaseEntity, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { websiteRegex } from "../utils/patterns";
+import { careersEnum } from "../dto/bootcamp.dto";
 
-type TCareer = 'web development' | 'mobile development' | 'ui/ux' | 'science' | 'business' | 'other'
+export type TCareer = 'web development' | 'mobile development' | 'ui/ux' | 'science' | 'business' | 'other'
 
 @Entity()
 export class BootCamp extends BaseEntity {
@@ -13,7 +14,7 @@ export class BootCamp extends BaseEntity {
   @Column({ unique: true, length: 50 })
   name: string
 
-  @Column()
+  @Column({ nullable: true })
   slug: string;
 
   @Column({ length: 500 })
@@ -36,8 +37,13 @@ export class BootCamp extends BaseEntity {
   @Column()
   location: string;
 
-  @Column({ type: 'enum', enum: ['web development', 'mobile development', 'ui/ux', 'data science', 'business', 'other'] })
-  careers: TCareer
+  @Column({
+    type: 'enum',
+    enum: careersEnum,
+    array: true,
+    default: [],
+  })
+  careers: TCareer[]
 
   @Column({ type: 'int' })
   @Min(1)

@@ -17,6 +17,7 @@ export class BootCampsService {
   }
 
   async create(req: Request) {
+    console.log(req.body);
     const dto = plainToClass(BootCampDto, req.body);
     const errors = await validate(dto);
 
