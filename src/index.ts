@@ -5,7 +5,9 @@ import "reflect-metadata";
 
 // routes
 import './routes'
+import { errorHandler } from './middleware/errorHandler';
 
+app.use(errorHandler)
 
 // initialize server
 const port = process.env.PORT || 8000;

@@ -1,26 +1,25 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { BootCampsService } from "../services/bootcamps.service";
 import { IController } from "../types/global";
 import { injectable } from "tsyringe";
+import { BootCamp } from "../entities/BootCamp";
 
 @injectable()
-export class BootCampController implements IController {
+export class BootCampController {
   constructor(private bootcampService: BootCampsService) { }
+
   list = async (req: Request, res: Response) => {
-    res.send(await this.bootcampService.list(req))
+    const result = await this.bootcampService.list(req);
+    res.send(result);
   }
 
-  create = (req: Request, res: Response) => {
-
+  create = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.bootcampService.create(req);
+      res.status(201).json(result);
+    } catch (error) {
+      next(error);
+    }
   }
-  show = (req: Request, res: Response) => {
 
-  }
-
-  update = (req: Request, res: Response) => {
-
-  }
-  delete = (req: Request, res: Response) => {
-
-  }
 }
