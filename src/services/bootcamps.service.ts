@@ -8,7 +8,7 @@ import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 
 export class BootCampsService {
-  private bootCampRepo: Repository<BootCamp> = AppDataSource.getRepository(BootCamp);
+  private bootCampRepo: Repository<BootCamp> = AppDataSource.getRepository(BootCamp)
 
   async list(req: Request) {
     const page = (req.query.page || 1) as number
@@ -36,19 +36,22 @@ export class BootCampsService {
 
   }
   async update(id: string, updateData: UpdateBootcampDto) {
+    const bootcamp = await this.bootCampRepo.findOne({ where: { id: Number(id) } });
 
-    const bootcamp = await this.bootCampRepo.findOneBy({ id: Number(id) });
     if (!bootcamp) {
       throw new Error("Bootcamp not found");
     }
 
-    const dto = plainToClass(UpdateBootcampDto, updateData);
-    const errors = await validate(dto);
+    Object.assign(bootcamp, updateData); // Merge update data into the found entity
+
+    const errors = await validate(bootcamp); // Validate the updated entity
     if (errors.length > 0) {
       throw { errors };
     }
-    await BootCamp.update(bootcamp.id, updateData)
+
+    return await this.bootCampRepo.save(bootcamp); // Save the updated entity
   }
+
 
 
 }
