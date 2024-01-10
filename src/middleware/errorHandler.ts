@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
+import { ErrorResponse } from "../helpers/errorResponse";
 
 export const errorHandler = (
-  err: any,
+  err: ErrorResponse,
   req: Request,
   res: Response,
   next: NextFunction
@@ -15,7 +16,7 @@ export const errorHandler = (
       {}
     );
 
-    return res.status(400).json({ errors: validationErrors });
+    return res.status(err.statusCode || 500).json({ errors: validationErrors });
   }
 
   if (err.message.includes('not found')) {

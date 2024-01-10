@@ -6,6 +6,7 @@ import { AppDataSource } from "../../ormconfig";
 import { BootCampDto, UpdateBootcampDto } from "../dto/bootcamp.dto";
 import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
+import { ErrorResponse } from "../helpers/errorResponse";
 
 export class BootCampsService {
   private bootCampRepo: Repository<BootCamp> = AppDataSource.getRepository(BootCamp)
@@ -21,7 +22,7 @@ export class BootCampsService {
     const errors = await validate(dto);
 
     if (errors.length > 0) {
-      throw { errors };
+      throw new ErrorResponse({ statusCode: 400, errors })
     }
 
     return await this.bootCampRepo.save({ ...dto });
@@ -46,7 +47,8 @@ export class BootCampsService {
 
     const errors = await validate(bootcamp); // Validate the updated entity
     if (errors.length > 0) {
-      throw { errors };
+      throw new ErrorResponse({ statusCode: 400, errors })
+
     }
 
     return await this.bootCampRepo.save(bootcamp); // Save the updated entity

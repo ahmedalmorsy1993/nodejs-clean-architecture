@@ -1,8 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { BootCampsService } from "../services/bootcamps.service";
-import { IController } from "../types/global";
 import { injectable } from "tsyringe";
-import { BootCamp } from "../entities/BootCamp";
+import { asyncHandler } from "../helpers/asyncHandler";
 
 @injectable()
 export class BootCampController {
@@ -13,30 +12,22 @@ export class BootCampController {
     res.send(result);
   }
 
-  create = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await this.bootcampService.create(req);
-      res.status(201).json(result);
-    } catch (error) {
-      next(error);
-    }
+  create = asyncHandler(async (req: Request, res: Response) => {
+    const result = await this.bootcampService.create(req);
+    res.status(201).json(result);
   }
+  )
 
-  delete = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await this.bootcampService.delete(req.params.id)
-      res.send({ message: 'bootcamp deleted successfully' })
-    } catch (error) {
-      next(error)
-    }
+  delete = asyncHandler(async (req: Request, res: Response) => {
+    await this.bootcampService.delete(req.params.id)
+    res.send({ message: 'bootcamp deleted successfully' })
+
   }
-  update = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await this.bootcampService.update(req.params.id, req.body)
-      res.send({ message: 'bootcamp updated successfully' })
-    } catch (error) {
-      next(error)
-    }
+  )
+  update = asyncHandler(async (req: Request, res: Response) => {
+    await this.bootcampService.update(req.params.id, req.body)
+    res.send({ message: 'bootcamp updated successfully' })
   }
+  )
 
 }
