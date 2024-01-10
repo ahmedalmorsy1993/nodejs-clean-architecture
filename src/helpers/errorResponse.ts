@@ -8,6 +8,8 @@ interface IError {
 
 export class ErrorResponse extends Error {
   statusCode: number;
+  code: number;
+  detail: string
   errors: ValidationError[];
   constructor({ message, statusCode, errors }: IError) {
     super(message);

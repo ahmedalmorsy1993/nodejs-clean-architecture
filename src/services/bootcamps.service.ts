@@ -30,7 +30,7 @@ export class BootCampsService {
   async delete(id: string) {
     const bootcamp = await this.bootCampRepo.findOne({ where: { id: Number(id) } })
     if (!bootcamp) {
-      throw new Error("Bootcamp not found"); // Throw an error object with a message
+      throw new ErrorResponse({ statusCode: 404, message: 'bootcamp not found' })
 
     }
     return await bootcamp.remove()
@@ -40,7 +40,8 @@ export class BootCampsService {
     const bootcamp = await this.bootCampRepo.findOne({ where: { id: Number(id) } });
 
     if (!bootcamp) {
-      throw new Error("Bootcamp not found");
+      throw new ErrorResponse({ statusCode: 404, message: 'bootcamp not found' })
+
     }
 
     Object.assign(bootcamp, updateData); // Merge update data into the found entity

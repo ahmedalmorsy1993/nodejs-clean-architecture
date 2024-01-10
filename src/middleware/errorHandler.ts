@@ -7,6 +7,11 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  if (err.code == 23505) {
+    // that mean duplicate ket constraint unique
+    return res.status(409).json({ message: err.detail });
+  }
+
   if (err && err.errors && Array.isArray(err.errors)) {
     const validationErrors = err.errors.reduce(
       (obj: { [key: string]: any }, error: any) => {
