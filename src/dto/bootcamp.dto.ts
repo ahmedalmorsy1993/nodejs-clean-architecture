@@ -64,3 +64,6 @@ export class BootCampDto {
 
 
 }
+
+
+export class UpdateBootcampDto implements Partial<BootCampDto> { }

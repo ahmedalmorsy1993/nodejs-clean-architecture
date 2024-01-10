@@ -27,7 +27,14 @@ export class BootCampController {
       await this.bootcampService.delete(req.params.id)
       res.send({ message: 'bootcamp deleted successfully' })
     } catch (error) {
-      console.log(error, 'errors');
+      next(error)
+    }
+  }
+  update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await this.bootcampService.update(req.params.id, req.body)
+      res.send({ message: 'bootcamp updated successfully' })
+    } catch (error) {
       next(error)
     }
   }

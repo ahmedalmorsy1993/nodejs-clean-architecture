@@ -3,7 +3,7 @@ import { BootCamp } from "../entities/BootCamp"
 import { Paginator } from "../helpers/pagination";
 import { Request, } from "express";
 import { AppDataSource } from "../../ormconfig";
-import { BootCampDto } from "../dto/bootcamp.dto";
+import { BootCampDto, UpdateBootcampDto } from "../dto/bootcamp.dto";
 import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 
@@ -35,5 +35,20 @@ export class BootCampsService {
     return await bootcamp.remove()
 
   }
+  async update(id: string, updateData: UpdateBootcampDto) {
+
+    const bootcamp = await this.bootCampRepo.findOneBy({ id: Number(id) });
+    if (!bootcamp) {
+      throw new Error("Bootcamp not found");
+    }
+
+    const dto = plainToClass(UpdateBootcampDto, updateData);
+    const errors = await validate(dto);
+    if (errors.length > 0) {
+      throw { errors };
+    }
+    await BootCamp.update(bootcamp.id, updateData)
+  }
+
 
 }
