@@ -22,4 +22,14 @@ export class BootCampController {
     }
   }
 
+  delete = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await this.bootcampService.delete(req.params.id)
+      res.send({ message: 'bootcamp deleted successfully' })
+    } catch (error) {
+      console.log(error, 'errors');
+      next(error)
+    }
+  }
+
 }

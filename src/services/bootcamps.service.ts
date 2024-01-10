@@ -17,7 +17,6 @@ export class BootCampsService {
   }
 
   async create(req: Request) {
-    console.log(req.body);
     const dto = plainToClass(BootCampDto, req.body);
     const errors = await validate(dto);
 
@@ -27,6 +26,14 @@ export class BootCampsService {
 
     return await this.bootCampRepo.save({ ...dto });
   }
+  async delete(id: string) {
+    const bootcamp = await this.bootCampRepo.findOne({ where: { id: Number(id) } })
+    if (!bootcamp) {
+      throw new Error("Bootcamp not found"); // Throw an error object with a message
 
+    }
+    return await bootcamp.remove()
+
+  }
 
 }
