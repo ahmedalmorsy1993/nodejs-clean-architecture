@@ -42,8 +42,8 @@ export class BootCampsService {
     return bootcamp
   }
 
-  private notFoundBootcamp(bootcamp: BootCampDto) {
-    if (!bootcamp) {
+  private notFoundBootcamp(BootCampDto: BootCampDto) {
+    if (!BootCampDto) {
       throw new ErrorResponse({ statusCode: 404, message: 'Bootcamp not found' });
     }
 
