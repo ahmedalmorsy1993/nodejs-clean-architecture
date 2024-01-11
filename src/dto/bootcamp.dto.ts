@@ -66,4 +66,9 @@ export class BootCampDto {
 }
 
 
-export class UpdateBootcampDto implements Partial<BootCampDto> { }
+export class BootCampFilterDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+  // Add more filter criteria as needed
+}

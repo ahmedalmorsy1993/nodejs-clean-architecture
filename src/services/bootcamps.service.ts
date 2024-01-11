@@ -3,19 +3,22 @@ import { BootCamp } from "../entities/BootCamp"
 import { Paginator } from "../helpers/pagination";
 import { Request, } from "express";
 import { AppDataSource } from "../../ormconfig";
-import { BootCampDto, } from "../dto/bootcamp.dto";
+import { BootCampDto, BootCampFilterDto, } from "../dto/bootcamp.dto";
 import { ErrorResponse } from "../helpers/errorResponse";
 import { requestValidator } from "../utils/requestValidator";
+import { plainToClass } from "class-transformer";
+import { filterQueryParams } from "../helpers/filterQueryParams";
 
 export class BootCampsService {
   private bootCampRepo: Repository<BootCamp> = AppDataSource.getRepository(BootCamp)
 
   async list(req: Request) {
-    const page = (req.query.page || 1) as number
-    const paginator = new Paginator(this.bootCampRepo);
+    const page = (req.query.page || 1) as number;
+    const filterDto = new BootCampFilterDto()
+    const filteredQuery = filterQueryParams(req.query, filterDto);
+    const paginator = new Paginator(this.bootCampRepo, filteredQuery);
     return await paginator.paginate(page);
   }
-
   async create(req: Request) {
     const dto = await requestValidator<BootCampDto>(BootCampDto, req.body)
     const bootCamp = this.bootCampRepo.create(dto); // Create the entity with the DTO\

@@ -1,3 +1,4 @@
+// Paginator.ts
 import { Repository } from 'typeorm';
 
 interface PaginationMeta {
@@ -8,7 +9,7 @@ interface PaginationMeta {
 }
 
 export class Paginator<T> {
-  constructor(private repository: Repository<T>) { }
+  constructor(private repository: Repository<T>, private filterDto?: T) { }
 
   async paginate(
     page: number = 1,
@@ -17,9 +18,14 @@ export class Paginator<T> {
     const skip = (page - 1) * perPage;
 
     const queryBuilder = this.repository.createQueryBuilder();
+    let qs = queryBuilder.skip(skip).take(perPage);
+
+    if (this.filterDto) {
+      qs = this.applyFilters(qs, this.filterDto);
+    }
 
     const [items, total] = await Promise.all([
-      queryBuilder.skip(skip).take(perPage).getMany(),
+      qs.getMany(),
       queryBuilder.getCount(),
     ]);
 
@@ -33,5 +39,17 @@ export class Paginator<T> {
     };
 
     return { data: items, meta };
+  }
+
+  private applyFilters(queryBuilder: any, filterDto: any): any {
+    // Add logic to dynamically apply filters based on filterDto
+    for (const key in filterDto) {
+      if (filterDto.hasOwnProperty(key) && filterDto[key] !== undefined) {
+        queryBuilder = queryBuilder.andWhere(`${key} = :${key}`, {
+          [key]: filterDto[key],
+        });
+      }
+    }
+    return queryBuilder;
   }
 }
