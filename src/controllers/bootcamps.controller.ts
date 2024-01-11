@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { BootCampsService } from "../services/bootcamps.service";
 import { injectable } from "tsyringe";
-import { asyncHandler } from "../helpers/asyncHandler";
+import { asyncHandler } from "../middleware/asyncHandler";
 
 @injectable()
 export class BootCampController {
@@ -27,6 +27,11 @@ export class BootCampController {
   update = asyncHandler(async (req: Request, res: Response) => {
     await this.bootcampService.update(req.params.id, req.body)
     res.send({ message: 'bootcamp updated successfully' })
+  }
+  )
+  show = asyncHandler(async (req: Request, res: Response) => {
+    const bootcamp = await this.bootcampService.show(req.params.id)
+    res.status(200).send({ data: bootcamp })
   }
   )
 

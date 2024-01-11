@@ -1,8 +1,9 @@
 import { IsEmail, Matches, Max, Min } from "class-validator";
-import { Column, CreateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn } from "typeorm";
 import { BaseEntity, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { websiteRegex } from "../utils/patterns";
 import { careersEnum } from "../dto/bootcamp.dto";
+import slugify from "slugify";
 
 export type TCareer = 'web development' | 'mobile development' | 'ui/ux' | 'science' | 'business' | 'other'
 
@@ -66,4 +67,13 @@ export class BootCamp extends BaseEntity {
   acceptGi: boolean
   @CreateDateColumn()
   createdAt: Date
+
+  @BeforeInsert()
+  updateSlug() {
+    if (this.name) {
+      this.slug = slugify(this.name, { lower: true });
+    }
+
+  }
+
 } 

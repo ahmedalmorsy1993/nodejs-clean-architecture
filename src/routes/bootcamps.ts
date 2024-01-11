@@ -6,6 +6,6 @@ const router: Router = Router();
 const bootCampController = container.resolve(BootCampController)
 
 router.route('/bootcamps').get(bootCampController.list).post(bootCampController.create)
-router.route('/bootcamps/:id').delete(bootCampController.delete).patch(bootCampController.update)
+router.route('/bootcamps/:id').delete(bootCampController.delete).patch(bootCampController.update).get(bootCampController.show)
 
 export default router
