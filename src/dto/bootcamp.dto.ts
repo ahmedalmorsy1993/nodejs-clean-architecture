@@ -70,5 +70,8 @@ export class BootCampFilterDto {
   @IsOptional()
   @IsString()
   name?: string;
+  @IsOptional()
+  @IsString()
+  description?: string;
   // Add more filter criteria as needed
 }

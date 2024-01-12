@@ -11,14 +11,24 @@ import { filterQueryParams } from "../helpers/filterQueryParams";
 
 export class BootCampsService {
   private bootCampRepo: Repository<BootCamp> = AppDataSource.getRepository(BootCamp)
-
   async list(req: Request) {
     const page = (req.query.page || 1) as number;
-    const filterDto = new BootCampFilterDto()
+
+    const filterDto = new BootCampFilterDto();
     const filteredQuery = filterQueryParams(req.query, filterDto);
-    const paginator = new Paginator(this.bootCampRepo, filteredQuery);
+    const paginator = new Paginator(this.bootCampRepo, (qb) => {
+      if (filteredQuery.name !== undefined) {
+        qb.andWhere('name = :name', { name: filteredQuery.name });
+      }
+
+      if (filteredQuery.description !== undefined) {
+        qb.orWhere('description LIKE :description', { description: `%${filteredQuery.description}%` });
+      }
+    });
     return await paginator.paginate(page);
   }
+
+
   async create(req: Request) {
     const dto = await requestValidator<BootCampDto>(BootCampDto, req.body)
     const bootCamp = this.bootCampRepo.create(dto); // Create the entity with the DTO\
